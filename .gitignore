@@ -1,0 +1,11 @@
+# Development environment settings
+.vscode/
+
+# Compiled files
+*.exe
+
+# Temporary files
+*.tmp
+
+# Github releases
+release/
