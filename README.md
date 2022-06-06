@@ -43,11 +43,8 @@ Here's some sample output:
 
 # Build and Install
 
-Assuming you have a Go compiler installed, the method is as follows:
-
-1. Clone the repository `https://github.com/m-z-b/syslogqd`
-2. cd to the root directory of the repository
-2. `go install`
+Assuming you have a Go compiler installed, simply execute `go install github.com/m-z-b/syslogqd@latest` to download, 
+build, and install the latest version.
 
 If you do not have a Go compiler installed, pre-built binaries for Windows and Linux/amd64 are included with each release. 
 Simply rename the appropriate binary and place it in your path. 
