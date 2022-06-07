@@ -12,15 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-Capture syslog messages sent to the supplied port
-
-Options
-  -port <port> Listen on a non-standard port
-  -file <file-path> Append output to a file (as well as stdout)
-  -quiet Do not write to stdout
-
-*/
 package main
 
 import (
