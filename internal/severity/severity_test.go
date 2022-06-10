@@ -17,7 +17,7 @@ package severity_test
 import (
 	"testing"
 
-	"github.com/m-z-b/syslogqd/severity"
+	"github.com/m-z-b/syslogqd/internal/severity"
 )
 
 type _parseExample struct {

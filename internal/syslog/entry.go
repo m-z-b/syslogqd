@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/m-z-b/syslogqd/facility"
-	"github.com/m-z-b/syslogqd/severity"
+	"github.com/m-z-b/syslogqd/internal/facility"
+	"github.com/m-z-b/syslogqd/internal/severity"
 )
 
 var (

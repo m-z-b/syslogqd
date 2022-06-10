@@ -23,7 +23,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/m-z-b/syslogqd/syslog"
+	"github.com/m-z-b/syslogqd/internal/syslog"
 )
 
 // ReadTimeout is the timeout for a TCP read

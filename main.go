@@ -21,9 +21,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/m-z-b/syslogqd/listener"
-	"github.com/m-z-b/syslogqd/severity"
-	"github.com/m-z-b/syslogqd/syslog"
+	"github.com/m-z-b/syslogqd/internal/listener"
+	"github.com/m-z-b/syslogqd/internal/reporter"
+	"github.com/m-z-b/syslogqd/internal/severity"
+	"github.com/m-z-b/syslogqd/internal/syslog"
 )
 
 // Tombstone information for the program
@@ -33,13 +34,12 @@ const (
 )
 
 // Command line arguments
-//
+// (note that these are displayed alphabetically)
 var (
-	optShowVersion = flag.Bool("version", false, "print version and exit")
-	optPort        = flag.Int("port", 514, "port to listen on (UDP-only)")
-	optFilename    = flag.String("file", "", "write output to file")
-	optQuiet       = flag.Bool("quiet", false, "do not write to standard output")
-	optSeverity    = flag.String("severity", "debug", "minimum severity of events to report")
+	optPort     = flag.Int("port", 514, "port to listen on (UDP-only)")
+	optFilename = flag.String("file", "", "write output to file")
+	optQuiet    = flag.Bool("quiet", false, "do not write to standard output")
+	optSeverity = flag.String("severity", "debug", "minimum severity of events to report")
 )
 
 var (
@@ -88,12 +88,14 @@ func CheckForFatalError(err error) {
 //
 // This interprets the command line arguments and sets up the listeners and a reporter
 func main() {
-	flag.Parse()
-
-	if *optShowVersion {
-		fmt.Printf("%s V%s\n", NAME, VERSION)
-		return
+	flag.Usage = func() {
+		w := flag.CommandLine.Output()
+		fmt.Fprintf(w, "Usage: %s V%s [options]\n", NAME, VERSION)
+		flag.PrintDefaults()
+		fmt.Fprintf(w, "\n Severity Values: %s\n", severity.PossibleValues())
 	}
+
+	flag.Parse()
 
 	if *optPort <= 0 || *optPort > 65535 {
 		FatalError("-port must be in the range 1..65535")
@@ -109,7 +111,7 @@ func main() {
 		CheckForFatalError(err)
 	}
 
-	reporter := NewReporter()
+	reporter := reporter.NewReporter()
 
 	if *optFilename != "" {
 		output, err = os.OpenFile(*optFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

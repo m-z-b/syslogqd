@@ -63,3 +63,17 @@ func Parse(s string) (Severity, error) {
 func Default() Severity {
 	return Severity(len(names) - 1)
 }
+
+// Get string of possible Severity values in number: name format
+func PossibleValues() string {
+	builder := strings.Builder{}
+	for i, name := range names {
+		if i > 0 {
+			builder.WriteString(", ")
+		}
+		builder.WriteString(strconv.Itoa(i))
+		builder.WriteString(":")
+		builder.WriteString(name)
+	}
+	return builder.String()
+}

@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package reporter
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/m-z-b/syslogqd/severity"
-	"github.com/m-z-b/syslogqd/syslog"
+	"github.com/m-z-b/syslogqd/internal/severity"
+	"github.com/m-z-b/syslogqd/internal/syslog"
 )
 
 // A Reporter repeatedly receives a syslog.Entry and writes it to a set of output streams

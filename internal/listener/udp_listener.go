@@ -20,7 +20,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/m-z-b/syslogqd/syslog"
+	"github.com/m-z-b/syslogqd/internal/syslog"
 )
 
 // Maximum number of bytes we will accept in a UDP message - although in theory this
