@@ -30,7 +30,7 @@ import (
 // Tombstone information for the program
 const (
 	NAME    = "syslogqd"
-	VERSION = "1.0"
+	VERSION = "1.0.2"
 )
 
 // Command line arguments
