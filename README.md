@@ -24,9 +24,11 @@ By default syslogqd will listen for UDP and TCP syslog messages on the default p
 
 `syslogqd -help` will show full usage information. There are options to:
  - listen on a different port
- - ignore lower-severity messages
+ - suppress lower-severity messages
+ - suppress messages which do not match a regular expression
  - save a copy of the output to a file
  - suppress output to stdout
+
 
 
 ## Timestamps, facilities, and severities

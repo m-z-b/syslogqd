@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
 
 	"github.com/m-z-b/syslogqd/internal/listener"
@@ -30,7 +31,7 @@ import (
 // Tombstone information for the program
 const (
 	NAME    = "syslogqd"
-	VERSION = "1.0.2"
+	VERSION = "1.1.3"
 )
 
 // Command line arguments
@@ -40,11 +41,13 @@ var (
 	optFilename = flag.String("file", "", "write output to file")
 	optQuiet    = flag.Bool("quiet", false, "do not write to standard output")
 	optSeverity = flag.String("severity", "debug", "minimum severity of events to report")
+	optRegex    = flag.String("regex", "", "Exclude events not matching this regular expression")
 )
 
 var (
 	output      *os.File                               // File to write to (if not null)
 	minSeverity severity.Severity = severity.Default() // Minimum severity to display
+	mustMatch   *regexp.Regexp                         // null or must match this to record
 )
 
 // FatalError prints a message followed by a newline to stderr and exits the program
@@ -111,7 +114,12 @@ func main() {
 		CheckForFatalError(err)
 	}
 
-	reporter := reporter.NewReporter()
+	if *optRegex != "" {
+		mustMatch, err = regexp.Compile(*optRegex)
+		CheckForFatalErrorF(err, "Invalid regular expression: %s", err)
+	}
+
+	reporter := reporter.NewReporter(mustMatch)
 
 	if *optFilename != "" {
 		output, err = os.OpenFile(*optFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -121,7 +129,11 @@ func main() {
 	}
 
 	if !*optQuiet {
-		fmt.Printf("%s V%s listening on port %d for severity >= %s\nUse Ctrl-C to exit\n", NAME, VERSION, *optPort, minSeverity)
+		fmt.Printf("%s V%s listening on port %d for severity >= %s\n", NAME, VERSION, *optPort, minSeverity)
+		if *optRegex != "" {
+			fmt.Printf("Ignoring messages which don't match \"%s\"\n", *optRegex)
+		}
+		fmt.Println("Use Ctrl-C to exit")
 		reporter.AddOutput(os.Stdout)
 	}
 

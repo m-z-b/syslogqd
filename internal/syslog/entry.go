@@ -95,6 +95,15 @@ func (self *Entry) HasSeverity() bool {
 	return self.hasSeverity
 }
 
+// A nil regex matches everything
+func (self *Entry) Matches(regex *regexp.Regexp) bool {
+	if regex == nil {
+		return true
+	} else {
+		return regex.MatchString(self.text)
+	}
+}
+
 func (self *Entry) String() string {
 	if self.hasSeverity {
 		return fmt.Sprintf("%s %s %s/%s: %s",

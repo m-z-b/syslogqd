@@ -17,6 +17,7 @@ package reporter
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/m-z-b/syslogqd/internal/severity"
 	"github.com/m-z-b/syslogqd/internal/syslog"
@@ -31,12 +32,13 @@ import (
 //    go r.Report(newswire, Severity.Default() )
 //
 type Reporter struct {
-	files []*os.File
+	files     []*os.File
+	mustMatch *regexp.Regexp
 }
 
 // NewReporter constructs a new Reporter instance
-func NewReporter() (r *Reporter) {
-	r = &Reporter{}
+func NewReporter(mustMatch *regexp.Regexp) (r *Reporter) {
+	r = &Reporter{mustMatch: mustMatch}
 	r.files = make([]*os.File, 0, 5)
 	return
 }
@@ -60,7 +62,9 @@ func (self *Reporter) Report(newswire syslog.Channel, minSeverity severity.Sever
 	for {
 		var e = <-newswire
 		if !e.HasSeverity() || e.Severity().AsOrMoreSevereThan(minSeverity) {
-			self.reportEntry(e)
+			if e.Matches(self.mustMatch) { // e.Matches handles nil as match any
+				self.reportEntry(e)
+			}
 		}
 	}
 }
