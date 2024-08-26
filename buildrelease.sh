@@ -16,17 +16,18 @@
 # This builds binaries for selected architectures
 # For possible OS and ARCH names, run  
 #     go tool dist list
-# Each build description consists of OS / Architecture / (optional) file extension
+# Each build description consists of OS / Architecture / (optional) GOARM / (optional) file extension
 # -ldflags="-s -w" strips out debugging/reflection info to reduce executable size
 #
 mkdir -p release
-for build in windows/amd64/.exe windows/386/.exe linux/amd64/ ; do
+for build in windows/amd64//.exe windows/386//.exe linux/amd64// linux/arm/7,softfloat/ ; do
   os=`echo $build  | cut -d '/' -f1`
   arch=`echo $build  | cut -d '/' -f2`
-  ext=`echo $build  | cut -d '/' -f3`
-  echo "Building for $os / $arch"
-  target="release/syslogqd-$os-$arch$ext"
-  GOOS=$os GOARCH=$arch go build -ldflags="-s -w" -o $target
+  armv=`echo $build | cut -d '/' -f3`    # Only for ARM
+  ext=`echo $build  | cut -d '/' -f4`
+  echo "Building for $os / $arch$armv"
+  target="release/syslogqd-$os-$arch$armv$ext"
+  GOOS=$os GOARCH=$arch GOARM=$armv go build -ldflags="-s -w" -o $target
 done
 ls -lh release/*
 
